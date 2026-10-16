@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Motion Arcade: Science 4 Week 5</title>
+<style>
+:root{--bg:#efe6ff;--card:#fff;--ink:#241344;--acc:#7c3aed;--hot:#ff4d8d;--ok:#2e9e5b;--bad:#d64545;--soft:#e4d9fb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150d2b;--card:#251a47;--ink:#f1e9ff;--soft:#392a66}}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(var(--bg),var(--soft));color:var(--ink);font-family:system-ui,sans-serif;padding:12px;text-align:center;min-height:100vh}
+.wrap{max-width:520px;margin:0 auto}
+h1{font-size:1.5rem;margin:4px 0}h2{font-size:1rem;margin:12px 0 4px}
+.sub{opacity:.8;font-size:.85rem}.hide{display:none!important}
+.card{background:var(--card);border-radius:18px;padding:12px;box-shadow:0 3px 10px #0003;margin:8px 0}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;color:inherit}
+.b{background:var(--acc);color:#fff;padding:12px 20px;font-weight:800;margin:4px}.b.alt{background:var(--soft);color:var(--ink)}.b.big{font-size:1.2rem;padding:15px 30px}.b.ok{background:var(--ok)}.b.pk{background:var(--hot)}
+input,select,textarea{font:inherit;color:inherit;background:var(--soft);border:0;border-radius:10px;padding:8px}
+textarea{width:100%;height:120px;font-size:.78rem;text-align:left}
+.pl{display:inline-flex;gap:4px;align-items:center;margin:3px}.pl input{width:125px}
+.mid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.game{background:var(--card);border-radius:18px;padding:14px 6px;box-shadow:0 4px 0 var(--acc);font-weight:800}
+.game .e{font-size:3rem;display:block;animation:bob 2s infinite alternate}.game small{display:block;font-weight:500;opacity:.75;font-size:.72rem}
+@keyframes bob{to{transform:translateY(-5px) rotate(5deg)}}
+.hud{display:flex;justify-content:space-between;font-weight:800}
+.bar{height:10px;background:var(--soft);border-radius:6px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:var(--hot);width:100%;transition:width 1s linear}
+.pic{font-size:3.8rem;line-height:1.1}.q{font-size:1.1rem;font-weight:800;margin:6px 0}
+.word{font-size:2.6rem;font-weight:900;color:var(--hot);margin:18px 0;word-break:break-word}
+.cat{display:inline-block;background:var(--soft);border-radius:12px;padding:4px 12px;font-weight:700}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.opt{background:var(--soft);padding:14px 6px;font-weight:800}
+.ok2{background:var(--ok)!important;color:#fff}.no{background:var(--bad)!important;color:#fff}
+.lane{position:relative;height:44px;background:#555;border-radius:10px;margin:6px 0;overflow:hidden}
+.lane::after{content:"🏁";position:absolute;right:6px;top:6px;font-size:1.6rem}
+.car{position:absolute;left:0;top:4px;font-size:1.9rem;transition:left 1.2s ease}
+.ln{font-size:.7rem;text-align:left;font-weight:800}
+.kb{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-top:8px}.kb button{background:var(--soft);padding:9px 0;font-weight:800}.kb button:disabled{opacity:.3}
+.sl{display:inline-flex;width:30px;height:38px;margin:2px;border-bottom:4px solid var(--acc);font-size:1.5rem;font-weight:900;align-items:flex-end;justify-content:center}.sl.g{border:0;width:12px}
+.bg{display:grid;gap:6px;margin-top:8px}
+.bc{background:var(--soft);padding:8px 2px;font-size:.74rem;font-weight:800;border-radius:10px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15}
+.bc.dn{background:var(--ok);color:#fff}.bc.bad{background:var(--bad);color:#fff}
+.row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:10px;background:var(--soft);margin:5px 0;font-weight:700}.row.w{background:var(--acc);color:#fff}
+.fall{position:fixed;top:-30px;font-size:1.8rem;animation:fl 2.4s linear forwards;pointer-events:none;z-index:9}@keyframes fl{to{transform:translateY(110vh) rotate(360deg)}}
+</style></head><body><div class="wrap">
+
+<div id="home">
+ <div style="font-size:2.2rem">🕹️🏎️🕵️🎯</div>
+ <h1>Motion Arcade</h1>
+ <div class="sub">Science 4 · Term 2 Week 5 · More games on forces, distance, time &amp; speed</div>
+ <div class="card"><h2>Players / Teams</h2>
+  <select id="pn"><option value="1">1 (Solo)</option><option>2</option><option>3</option><option selected>4</option></select><div id="pnames"></div>
+  <h2>Time per turn / game</h2>
+  <select id="time"><option value="60">1 minute</option><option value="90">1 minute 30 seconds</option><option value="120">2 minutes</option></select></div>
+ <div class="mid">
+  <button class="game" data-g="hen"><span class="e">🕵️</span>Pinoy Henyo<small>Guess the word with Yes/No clues</small></button>
+  <button class="game" data-g="car"><span class="e">🏎️</span>Toy Car Race<small>Right answers move your car</small></button>
+  <button class="game" data-g="hang"><span class="e">🔤</span>Guess the Word<small>Hangman with picture hearts</small></button>
+  <button class="game" data-g="bingo"><span class="e">🎯</span>Motion Bingo<small>Match the clue, claim the square</small></button>
+ </div>
+ <button class="b alt" id="edit">✏️ Edit words &amp; questions</button>
+</div>
+
+<div id="editor" class="hide">
+ <h1>✏️ Edit Games</h1>
+ <div class="card">
+ <h2>Pinoy Henyo: Word | Category</h2><textarea id="th"></textarea>
+ <h2>Guess the Word: WORD | Hint</h2><textarea id="tm"></textarea>
+ <h2>Motion Bingo: Emoji + Term | Clue (need 9+ lines)</h2><textarea id="tb"></textarea>
+ <h2>Car Race quiz: Topic | Emoji | Question | Correct | Wrong | (Wrong)</h2><textarea id="tq" style="height:160px"></textarea></div>
+ <button class="b" id="save">💾 Save</button><button class="b alt" id="reset">Reset</button><button class="b alt" id="back">← Back</button><div class="sub" id="emsg"></div>
+</div>
+
+<div id="stage" class="hide"></div>
+<div id="end" class="hide"><h1 id="et"></h1><div class="card" id="eb"></div><button class="b" id="again">↺ Play again</button></div>
+</div>
+<script>
+const DH=`Force|Forces
+Push|Forces
+Pull|Forces
+Motion|Forces
+Magnet|Forces
+Speed|Measuring
+Distance|Measuring
+Time|Measuring
+Stopwatch|Measuring tools
+Meter stick|Measuring tools
+Reference point|Motion
+Stretch|Shape changes
+Bend|Shape changes
+Twist|Shape changes
+Squeeze|Shape changes
+Rigid|Objects
+Soft|Objects
+Clay|Objects
+Sponge|Objects
+Rubber band|Objects
+Cheetah|Animals
+Tarsier|Animals
+Sprinter|People
+Toy car|Things that move`,DM=`SPEED|How fast an object moves
+DISTANCE|How far two points are
+TIME|Measured with a stopwatch
+FORCE|A push or a pull
+STRETCH|Makes a rubber band longer
+SQUEEZE|Presses a sponge
+TWIST|Turning opposite ends
+REFERENCE|___ point tells if something moved
+STOPWATCH|Tool that measures time
+MAGNET|Pulls a paperclip
+CHEETAH|Fastest land animal
+TARSIER|Smallest monkey in the world
+SPRINTER|Runs the 100-m dash
+BEND|Curving a straw`,DB=`💪 Force|A push or a pull
+👉 Push|Moves an object away from you
+🤏 Pull|Brings an object closer
+🐆 Speed|How fast an object moves
+📍 Distance|How far two points are from each other
+⏱️ Time|The duration of an event
+⌚ Stopwatch|Tool for measuring time
+📏 Meter stick|Tool for measuring distance
+🌳 Reference point|A stationary place used to tell if something moved
+🪢 Stretch|Makes a rubber band longer and thinner
+🥤 Bend|Changes a straw from straight to curved
+🧺 Twist|Turning opposite ends, like a wet towel
+🧽 Squeeze|Makes a sponge smaller and compressed
+🧱 Rigid|Hard objects like stone or glass
+🧸 Soft|Easily changed by force, like clay
+🧲 Magnet|Pulls a paperclip without touching
+🏃 Motion|A change of position over time`,DQ=`Review|🏃|True or False: Motion happens when an object changes its position over time.|True|False
+Review|💪|A push or a pull applied to an object is called...|Force|Speed|Time
+Review|🚗|A car moving along a straight road shows which motion?|Straight (linear)|Circular|Back-and-forth
+Review|🌀|A fan blade spinning shows which motion?|Circular|Straight (linear)|Back-and-forth
+Review|🎠|A child on a swing shows which motion?|Back-and-forth|Circular|Straight (linear)
+Push or Pull|⚽|Kicking a soccer ball is a...|Push|Pull
+Push or Pull|🛒|Pulling a wagon is a...|Pull|Push
+Push or Pull|🚪|Closing a door is a...|Push|Pull
+Push or Pull|🗄️|Opening a drawer is a...|Pull|Push
+Push or Pull|🧲|A magnet attracting a paperclip is a...|Pull|Push
+Shape Changes|🪢|Stretching a rubber band makes it...|Longer and thinner|Shorter and fatter|Heavier
+Shape Changes|🥤|Bending a straw changes it from straight to...|Curved|Longer|Heavier
+Shape Changes|🧽|Squeezing a sponge makes it...|Smaller and compressed|Longer|Straighter
+Shape Changes|🧺|Twisting a wet towel makes it...|Spiral|Flat|Longer only
+Shape Changes|🍞|Flattening dough with your hand is a...|Push|Pull
+Shape Changes|🧶|Pulling both ends of clay makes it...|Longer and thinner|Flatter|Compressed
+Soft or Rigid|🧱|Which is a RIGID object?|Stone|Clay|Sponge
+Soft or Rigid|🧽|Which is a SOFT object?|Sponge|Metal spoon|Glass
+Soft or Rigid|💪|Rigid objects need ___ force to change shape.|Greater|Less|No
+Soft or Rigid|🥄|A metal spoon is...|Rigid|Soft
+Reference Point|🌳|A reference point is a...|Stationary place used to tell if an object moved|Fast runner|Measuring tape
+Reference Point|👦|The boy moves relative to the tree. The tree is the...|Reference point|Distance|Speed
+Reference Point|🧭|Why do we need a reference point?|To see the change in position|To make it heavier|To stop motion
+Distance Time Speed|📍|Distance is a measure of...|How far two points are|How long an event takes|How fast an object moves
+Distance Time Speed|⏱️|Time is a measure of...|The duration of an event|How far two points are|How fast an object moves
+Distance Time Speed|🐆|Speed is a measure of...|How fast an object moves|How far two points are|How long an event takes
+Distance Time Speed|📏|Which tool best measures distance?|Meter stick|Stopwatch|Calculator
+Distance Time Speed|⌚|Which tool measures time?|Stopwatch|Meter stick|Ruler only
+Distance Time Speed|🧮|Speed = distance ÷ ___|Time|Force|Shape
+Distance Time Speed|🏁|If distance grows but time stays the same, speed...|Increases|Decreases|Stays the same
+Speed Problems|🏃‍♀️|A sprinter finished the 100-m dash in 10 s. Her speed is...|10 m/s|1 m/s|100 m/s
+Speed Problems|🐒|A tarsier travels 20 km in 0.5 hour. Its speed is...|40 km/h|10 km/h|20 km/h
+Speed Problems|🐦|A bird flies 100 m in 50 s. Its speed is...|2 m/s|5 m/s|50 m/s
+Speed Problems|🍽️|Kath walks 10 m in 10 s. Her speed is...|1 m/s|2 m/s|10 m/s
+Speed Problems|🚆|A train goes 450 km at 90 km/h. The trip takes...|5 hours|4 hours|40 hours
+Speed Problems|🐆|A cheetah runs 110 km/h for 0.5 h. Distance covered...|55 km|110 km|220 km
+Speed Problems|🚴|Cyclist: 24 km in 1.5 h. Runner: 10 km in 1 h. Who is faster?|Cyclist (16 km/h)|Runner (10 km/h)|Same speed
+Speed Problems|🏫|A pupil walks 10 m in 20 s. Her speed is...|0.5 m/s|2 m/s|10 m/s
+Speed Problems|🏅|Jurmin ran the court in 10 s, Jervin in 12 s. Who won?|Jurmin|Jervin|Tie`;
+const $=id=>document.getElementById(id),R=a=>a[Math.random()*a.length|0],S=a=>[...a].sort(()=>Math.random()-.5);
+const AV=["🦊","🐯","🐼","🦄"],fmt=s=>s==60?"1 minute":s==90?"1 minute 30 seconds":"2 minutes";
+let H=[],HM=[],B=[],Q=[],P=[],T=60,SI=0,G="",ct=null;
+function rd(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}}
+const K=[["th","ah",DH],["tm","am",DM],["tb","ab",DB],["tq","aq",DQ]];
+function ld(){K.forEach(k=>$(k[0]).value=rd(k[1],k[2]));parse()}
+function lines(id){return $(id).value.split("\n").map(l=>l.split("|").map(x=>x.trim())).filter(p=>p[0])}
+function parse(){H=lines("th").map(p=>({w:p[0],c:p[1]||""}));HM=lines("tm").map(p=>({w:p[0].toUpperCase(),h:p[1]||""}));
+ B=lines("tb").filter(p=>p.length>=2).map(p=>({t:p[0],c:p[1]}));Q=lines("tq").filter(p=>p.length>=5).map(p=>({c:p[0],p:p[1],q:p[2],a:p[3],w:p.slice(4).filter(Boolean)}))}
+function show(id){["home","editor","stage","end"].forEach(x=>$(x).classList.toggle("hide",x!==id))}
+function pn(){const n=+$("pn").value;$("pnames").innerHTML=Array.from({length:n},(_,i)=>`<span class="pl">${AV[i]}<input value="${n==1?"Player":"Team "+(i+1)}" maxlength="14"></span>`).join("")}
+$("pn").onchange=pn;$("edit").onclick=()=>show("editor");$("back").onclick=()=>show("home");
+$("save").onclick=()=>{parse();try{K.forEach(k=>localStorage.setItem(k[1],$(k[0]).value))}catch(e){}$("emsg").textContent="✅ Saved!"};
+$("reset").onclick=()=>{try{K.forEach(k=>localStorage.removeItem(k[1]))}catch(e){}ld();$("emsg").textContent="Reset to default."};
+$("again").onclick=()=>show("home");
+function party(){for(let k=0;k<26;k++){const e=document.createElement("div");e.className="fall";e.textContent=["🎉","⭐","🏆","🏎️","🐆"][k%5];e.style.left=Math.random()*95+"vw";e.style.animationDelay=Math.random()*.9+"s";document.body.appendChild(e);setTimeout(()=>e.remove(),3400)}}
+document.querySelectorAll(".game").forEach(b=>b.onclick=()=>{parse();const g=b.dataset.g;
+ if((g=="hen"&&H.length<3)||(g=="hang"&&HM.length<2)||(g=="bingo"&&B.length<9)||(g=="car"&&Q.length<4)){alert("Not enough items. Open ✏️ Edit and add more.");return}
+ G=g;T=+$("time").value;P=[...$("pnames").querySelectorAll("input")].map((e,i)=>({n:e.value||"Team "+(i+1),av:AV[i],sc:0,x:0,steps:0}));SI=0;
+ g=="bingo"?bingo():ready()});
+const INFO={hen:"Guesser: face the class, don't look at the screen! Helpers: answer YES or NO only. Tap ✅ when guessed.",car:"Every correct answer moves your car forward. Reach the 🏁 in 12 correct answers for a time bonus!",hang:"Guess the letters before you lose all 6 hearts. Solve as many words as you can!",};
+function ready(){const p=P[SI];$("stage").innerHTML=`<h1>${p.av} ${p.n}, get ready!</h1><div class="card"><div style="font-size:3rem">${{hen:"🕵️",car:"🏎️",hang:"🔤"}[G]}</div><div>${INFO[G]}</div><div class="sub" style="margin-top:6px">Time: ${fmt(T)}</div></div><button class="b big" id="go">▶ Go!</button><br><button class="b alt" id="mn">← Menu</button>`;
+ show("stage");$("go").onclick=()=>({hen,car,hang})[G]();$("mn").onclick=()=>{clearInterval(ct);show("home")}}
+function hud(p,extra){$("stage").innerHTML=`<div class="hud"><span>${p.av} ${p.n}</span><span>⭐ <span id="sc">0</span></span><span>⏱ <span id="tc"></span></span></div><div class="bar"><i id="tb2"></i></div>${extra}`}
+function runT(onEnd){let left=T;clearInterval(ct);const tk=()=>{$("tc").textContent=Math.floor(left/60)+":"+String(left%60).padStart(2,"0");$("tb2").style.width=(left/T*100)+"%";if(left<=0){clearInterval(ct);onEnd();return}left--};tk();ct=setInterval(tk,1000);return()=>left}
+function fin(score,steps){const p=P[SI];p.sc=score;p.steps=steps||0;if(++SI<P.length)ready();else results()}
+function results(){const r=[...P].sort((a,b)=>b.sc-a.sc),tie=r.length>1&&r[0].sc==r[1].sc;
+ $("et").textContent=P.length==1?"⏰ Time's up!":tie?"🤝 It's a tie!":"🏆 "+r[0].n+" wins!";
+ let lanes="";if(G=="car")lanes=P.map(p=>`<div class="ln">${p.av} ${p.n}</div><div class="lane"><span class="car" data-s="${p.steps}">🏎️</span></div>`).join("");
+ $("eb").innerHTML=lanes+r.map((p,i)=>`<div class="row ${i==0&&!tie?"w":""}"><span>${i+1}. ${p.av} ${p.n}</span><span>⭐ ${p.sc}</span></div>`).join("");show("end");
+ setTimeout(()=>document.querySelectorAll(".car").forEach(c=>c.style.left=(+c.dataset.s/12*(c.parentNode.clientWidth-80))+"px"),200);party()}
+// ---- Pinoy Henyo
+function hen(){let d=S(H),i=0,sc=0;hud(P[SI],`<div class="card"><div class="sub">Helpers: say YES or NO!</div><div class="cat" id="hc"></div><div class="word" id="hw"></div><button class="b ok" id="gt">✅ Got it!</button><button class="b alt" id="ps">⏭ Pass</button></div>`);
+ const nx=()=>{if(i>=d.length){d=S(H);i=0}const w=d[i++];$("hc").textContent="Category: "+(w.c||"?");$("hw").textContent=w.w};
+ $("gt").onclick=()=>{sc++;$("sc").textContent=sc;nx()};$("ps").onclick=nx;nx();runT(()=>fin(sc))}
+// ---- Toy Car Race
+function calc(){const v=R([2,3,4,5,6,8,10,12,15,20,25,30,40,50,60,90]),t=R([2,3,4,5,6,8,10]),d=v*t,m=Math.random()<.5,[du,tu,su]=m?["m","s","m/s"]:["km","h","km/h"],
+ [pic,who]=R([["🏃","A runner"],["🚴","A cyclist"],["🚆","A train"],["🐆","A cheetah"],["🚗","A car"],["🐦","A bird"]]),k=R([0,1,2]);
+ const q=[`${who} travels ${d} ${du} in ${t} ${tu}. What is its speed?`,`${who} moves at ${v} ${su} for ${t} ${tu}. How far does it go?`,`${who} travels ${d} ${du} at ${v} ${su}. How long does it take?`][k],
+ x=[v,d,t][k],u=[su,du,tu][k],set=new Set();while(set.size<3){const y=R([x*2,x+1,x+2,x+3,Math.max(1,x-1),Math.max(1,x-2),x*3]);if(y!=x)set.add(y)}
+ return{p:pic+"🧮",q,a:x+" "+u,w:[...set].map(y=>y+" "+u)}}
+function car(){const p=P[SI];let d=S(Q),n=0,st=0,lock=false,gl;
+ hud(p,`<div class="lane"><span class="car" id="cr">🏎️</span></div><div class="card"><div class="pic" id="cp"></div><div class="q" id="cq"></div><div class="opts" id="co"></div></div>`);
+ const mv=()=>{$("cr").style.left=(st/12*($("cr").parentNode.clientWidth-80))+"px"};
+ const nq=()=>{lock=false;if(!d.length)d=S(Q);const b=(++n%3==0)?calc():d.pop();$("cp").textContent=b.p;$("cq").textContent=b.q;
+  $("co").innerHTML=S([b.a,...b.w]).map(o=>`<button class="opt">${o}</button>`).join("");
+  $("co").querySelectorAll(".opt").forEach(e=>e.onclick=()=>{if(lock)return;lock=true;const g=e.textContent==b.a;e.classList.add(g?"ok2":"no");
+   if(g){st++;$("sc").textContent=st*10;mv()}else[...$("co").querySelectorAll(".opt")].find(x=>x.textContent==b.a).classList.add("ok2");
+   if(st>=12){clearInterval(ct);setTimeout(()=>fin(st*10+Math.floor(gl()/3),st),700);return}setTimeout(nq,600)})};
+ nq();gl=runT(()=>fin(st*10,st))}
+// ---- Guess the Word (hangman)
+function hang(){let d=S(HM),i=0,sc=0,w,g,lives,lock;
+ hud(P[SI],`<div class="card"><div id="hh" style="font-size:1.6rem"></div><div class="sub" id="hn"></div><div id="hs" style="margin:10px 0"></div></div><div class="kb" id="kb"></div>`);
+ const nw=()=>{if(i>=d.length){d=S(HM);i=0}w=d[i++];g=new Set();lives=6;lock=false;rn()};
+ const rn=()=>{$("hh").textContent="❤️".repeat(lives)+"🖤".repeat(6-lives);$("hn").textContent="💡 "+w.h;
+  $("hs").innerHTML=w.w.split("").map(c=>c==" "?`<span class="sl g"></span>`:`<span class="sl">${g.has(c)||lock&&lives<=0?c:""}</span>`).join("");
+  $("kb").innerHTML="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(c=>`<button ${g.has(c)||lock?"disabled":""}>${c}</button>`).join("");
+  $("kb").querySelectorAll("button").forEach(b=>b.onclick=()=>{const c=b.textContent;g.add(c);if(!w.w.includes(c))lives--;rn();
+   const won=w.w.split("").every(x=>x==" "||g.has(x));
+   if(won){lock=true;sc+=10;$("sc").textContent=sc;rn();setTimeout(nw,800)}else if(lives<=0){lock=true;rn();setTimeout(nw,1400)}})};
+ nw();runT(()=>fin(sc))}
+// ---- Motion Bingo
+function bingo(){const n=B.length>=16?16:9,cols=n==16?4:3,cells=S(B).slice(0,n),order=S(cells);let k=0,ti=0,left=T,pause=false;
+ P.forEach(p=>p.sc=0);
+ $("stage").innerHTML=`<div class="hud"><span id="bt"></span><span>⏱ <span id="tc"></span></span></div><div class="bar"><i id="tb2"></i></div><div class="card"><div class="sub">Which term matches this clue?</div><div class="q" id="bq"></div></div><div class="bg" id="bg" style="grid-template-columns:repeat(${cols},1fr)"></div><div class="stars sub" id="bs"></div><button class="b alt" id="mn">← Menu</button>`;show("stage");
+ $("mn").onclick=()=>{clearInterval(ct);show("home")};
+ const rn=()=>{$("bt").textContent=P[ti].av+" "+P[ti].n+"'s turn";$("bq").textContent=order[k]?order[k].c:"";
+  $("bs").textContent=P.map(p=>p.av+" "+p.n+": ⭐"+p.sc).join("  ·  ");
+  $("bg").innerHTML=cells.map((c,i)=>`<div class="bc ${c.o!=null?"dn":""}" data-i="${i}">${c.o!=null?P[c.o].av+"<br>":""}${c.t}</div>`).join("");
+  $("bg").querySelectorAll(".bc").forEach(e=>e.onclick=()=>{if(pause)return;const c=cells[+e.dataset.i];if(c.o!=null)return;
+   if(c===order[k]){c.o=ti;P[ti].sc+=10;k++;ti=(ti+1)%P.length;if(k>=order.length){rn();return finB()}rn()}
+   else{pause=true;e.classList.add("bad");setTimeout(()=>{pause=false;if(P.length>1)ti=(ti+1)%P.length;rn()},600)}})};
+ const finB=()=>{clearInterval(ct);G="bingo";setTimeout(results,500)};
+ rn();const tk=()=>{$("tc").textContent=Math.floor(left/60)+":"+String(left%60).padStart(2,"0");$("tb2").style.width=(left/T*100)+"%";if(left<=0){finB();return}left--};
+ clearInterval(ct);tk();ct=setInterval(tk,1000)}
+ld();pn();
+</script></body></html>
